@@ -142,14 +142,8 @@
                 const trampolineLastTicket = getInputValue('trampolineLastTicket');
 
                 // Calculate ticket sales
-                const bungeeTicketsSold = 0;
-                if(!isNaN(bungeeFirstTicket) && !isNaN(bungeeLastTicket)){
-                    const bungeeTicketsSold = bungeeLastTicket - bungeeFirstTicket + 1;
-                }
-                const trampolineTicketsSold = 0;
-                if(!isNaN(trampolineFirstTicket) && !isNaN(trampolineLastTicket)){
-                    const trampolineTicketsSold = trampolineLastTicket - trampolineFirstTicket + 1;
-                }
+                const bungeeTicketsSold = bungeeLastTicket - bungeeFirstTicket + 1;
+                const trampolineTicketsSold = trampolineLastTicket - trampolineFirstTicket + 1;
 
                 // Calculate total prices
                 const bungeeTotalPrice = roundToTwo(bungeeTicketsSold * BUNGEE_PRICE);
@@ -159,14 +153,6 @@
                 const coinsSold = roundToTwo(((totalRevenue - BASE_REVENUE) - (bungeeTotalPrice + trampolineTotalPrice)) / COIN_PRICE);
                 const coinsTotalPrice = roundToTwo(coinsSold * COIN_PRICE);
                 const coinsInRepair = roundToTwo(intialCoinsCount - coinsSold - coinsRemaning);
-
-                console.log('Celková tržba:', totalRevenue);
-                console.log('Bungee T prvý lístok:', bungeeFirstTicket);
-                console.log('Bungee T posledný lístok:', bungeeLastTicket);
-                console.log('Trampolína prvý lístok:', trampolineFirstTicket);
-                console.log('Trampolína posledný lístok:', trampolineLastTicket);
-                console.log('Predané lístky na Bungee T:', bungeeTicketsSold);
-                console.log('Predané lístky na Trampolínu:', trampolineTicketsSold);
 
                 // Display results
                 document.getElementById('result').innerHTML = `
