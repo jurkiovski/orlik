@@ -125,6 +125,11 @@
             return parseFloat(document.getElementById(id).value) || 0;
         }
 
+        // Function to format number to always show two decimal places
+        function formatNumber(num) {
+            return num.toFixed(2);
+        }
+
         function calculate() {
             try {
                 // Get input values
@@ -151,13 +156,13 @@
 
                 // Display results
                 document.getElementById('result').innerHTML = `
-                    Počet predaných lístkou na Bungee T: ${bungeeTicketsSold}<br>
-                    Bungee T hodnota v €: ${bungeeTotalPrice}<br>
-                    Počet predaných lístkou Trampolínu: ${trampolineTicketsSold}<br>
-                    Trampolína hodnota v €: ${trampolineTotalPrice}<br>
-                    Počet predaných žetonou: ${coinsSold} (${coinsInRepair})<br>
-                    Žetóny hodnota v €: ${coinsTotalPrice}<br>
-                    Žetóny na vrátenie: ${coinsRemaning}
+                    Počet predaných lístkou na Bungee T: ${formatNumber(bungeeTicketsSold)}<br>
+                    Bungee T hodnota v €: ${formatNumber(bungeeTotalPrice)}<br>
+                    Počet predaných lístkou Trampolínu: ${formatNumber(trampolineTicketsSold)}<br>
+                    Trampolína hodnota v €: ${formatNumber(trampolineTotalPrice)}<br>
+                    Počet predaných žetonou: ${formatNumber(coinsSold)} (${formatNumber(coinsInRepair)})<br>
+                    Žetóny hodnota v €: ${formatNumber(coinsTotalPrice)}<br>
+                    Žetóny na vrátenie: ${formatNumber(coinsRemaning)}
                 `;
             } catch (error) {
                 document.getElementById('result').innerHTML = 'Chyba pri výpočte. Skontrolujte vstupné údaje.';
