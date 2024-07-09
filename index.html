@@ -140,10 +140,19 @@
                 const bungeeLastTicket = getInputValue('bungeeLastTicket');
                 const trampolineFirstTicket = getInputValue('trampolineFirstTicket');
                 const trampolineLastTicket = getInputValue('trampolineLastTicket');
+                let bungeeTicketsSold = 0;
+                let trampolineTicketsSold = 0;
 
-                // Calculate ticket sales
-                const bungeeTicketsSold = bungeeLastTicket - bungeeFirstTicket + 1;
-                const trampolineTicketsSold = trampolineLastTicket - trampolineFirstTicket + 1;
+                // Calculate ticket sales if there were any :D 
+                if(bungeeFirstTicket != 0 && bungeeLastTicket != 0){
+                    bungeeTicketsSold = bungeeLastTicket - bungeeFirstTicket + 1;
+                    
+                }
+                
+                if(trampolineFirstTicket != 0 && trampolineLastTicket != 0){
+                    trampolineTicketsSold = trampolineLastTicket - trampolineFirstTicket + 1;
+                
+                }
 
                 // Calculate total prices
                 const bungeeTotalPrice = roundToTwo(bungeeTicketsSold * BUNGEE_PRICE);
@@ -153,6 +162,14 @@
                 const coinsSold = roundToTwo(((totalRevenue - BASE_REVENUE) - (bungeeTotalPrice + trampolineTotalPrice)) / COIN_PRICE);
                 const coinsTotalPrice = roundToTwo(coinsSold * COIN_PRICE);
                 const coinsInRepair = roundToTwo(intialCoinsCount - coinsSold - coinsRemaning);
+
+                console.log('Celková tržba:', totalRevenue);
+                console.log('Bungee T prvý lístok:', bungeeFirstTicket);
+                console.log('Bungee T posledný lístok:', bungeeLastTicket);
+                console.log('Trampolína prvý lístok:', trampolineFirstTicket);
+                console.log('Trampolína posledný lístok:', trampolineLastTicket);
+                console.log('Predané lístky na Bungee T:', bungeeTicketsSold);
+                console.log('Predané lístky na Trampolínu:', trampolineTicketsSold);
 
                 // Display results
                 document.getElementById('result').innerHTML = `
@@ -166,6 +183,7 @@
                 `;
             } catch (error) {
                 document.getElementById('result').innerHTML = 'Chyba pri výpočte. Skontrolujte vstupné údaje.';
+                console.log(error);
             }
         }
     </script>
