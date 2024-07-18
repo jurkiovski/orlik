@@ -6,27 +6,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulár na výpočet tržieb</title>
     <style>
+        :root {
+            --bg-color: #f0f0f0;
+            --text-color: #333;
+            --input-bg: #fff;
+            --input-border: #ccc;
+            --button-bg: #28a745;
+            --button-hover: #218838;
+            --container-bg: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #1a1a1a;
+                --text-color: #f0f0f0;
+                --input-bg: #333;
+                --input-border: #555;
+                --button-bg: #28a745;
+                --button-hover: #218838;
+                --container-bg: #2a2a2a;
+                --shadow-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .container {
-            background-color: #fff;
+            background-color: var(--container-bg);
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
+            box-shadow: 0 0 10px var(--shadow-color);
             max-width: 400px;
+            margin: 0 auto;
         }
 
-        .container h1 {
+        h1 {
             text-align: center;
             margin-bottom: 20px;
         }
@@ -35,40 +57,62 @@
             margin-bottom: 15px;
         }
 
-        .input-group label {
+        label {
             display: block;
             margin-bottom: 5px;
         }
 
-        .input-group input {
+        input {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--input-border);
             border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
         }
 
         .btn {
             display: block;
             width: 100%;
             padding: 10px;
-            background-color: #28a745;
+            background-color: var(--button-bg);
             color: white;
             border: none;
             border-radius: 4px;
             text-align: center;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
 
         .btn:hover {
-            background-color: #218838;
+            background-color: var(--button-hover);
         }
 
         .result {
             margin-top: 20px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .error {
+            color: #dc3545;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            input {
+                font-size: 16px; /* Prevent zoom on focus in iOS */
+            }
         }
     </style>
 </head>
@@ -76,36 +120,39 @@
 <body>
     <div class="container">
         <h1>Formulár na výpočet tržieb</h1>
-        <div class="input-group">
-            <label for="totalRevenue">Celková tržba</label>
-            <input type="number" id="totalRevenue">
-        </div>
-        <div class="input-group">
-            <label for="intialCoinsCount">Počet prevzatých žetonov</label>
-            <input type="number" id="intialCoinsCount">
-        </div>
-        <div class="input-group">
-            <label for="coinsRemaning">Počet zostavajúcich žetonov</label>
-            <input type="number" id="coinsRemaning">
-        </div>
-        <div class="input-group">
-            <label for="bungeeFirstTicket">Bungee T prvý lístok</label>
-            <input type="number" id="bungeeFirstTicket">
-        </div>
-        <div class="input-group">
-            <label for="bungeeLastTicket">Bungee T posledný lístok</label>
-            <input type="number" id="bungeeLastTicket">
-        </div>
-        <div class="input-group">
-            <label for="trampolineFirstTicket">Trampolína prvý lístok</label>
-            <input type="number" id="trampolineFirstTicket">
-        </div>
-        <div class="input-group">
-            <label for="trampolineLastTicket">Trampolína posledný lístok</label>
-            <input type="number" id="trampolineLastTicket">
-        </div>
-        <button class="btn" onclick="calculate()">Vypočítať</button>
+        <form id="revenueForm">
+            <div class="input-group">
+                <label for="totalRevenue">Celková tržba (€)</label>
+                <input type="number" id="totalRevenue" required step="0.01" min="0">
+            </div>
+            <div class="input-group">
+                <label for="initialCoinsCount">Počet prevzatých žetónov</label>
+                <input type="number" id="initialCoinsCount" required min="0">
+            </div>
+            <div class="input-group">
+                <label for="coinsRemaining">Počet zostávajúcich žetónov</label>
+                <input type="number" id="coinsRemaining" required min="0">
+            </div>
+            <div class="input-group">
+                <label for="bungeeFirstTicket">Bungee T prvý lístok</label>
+                <input type="number" id="bungeeFirstTicket" required min="0">
+            </div>
+            <div class="input-group">
+                <label for="bungeeLastTicket">Bungee T posledný lístok</label>
+                <input type="number" id="bungeeLastTicket" required min="0">
+            </div>
+            <div class="input-group">
+                <label for="trampolineFirstTicket">Trampolína prvý lístok</label>
+                <input type="number" id="trampolineFirstTicket" required min="0">
+            </div>
+            <div class="input-group">
+                <label for="trampolineLastTicket">Trampolína posledný lístok</label>
+                <input type="number" id="trampolineLastTicket" required min="0">
+            </div>
+            <button type="submit" class="btn">Vypočítať</button>
+        </form>
         <div class="result" id="result"></div>
+        <div class="error" id="error"></div>
     </div>
 
     <script>
@@ -130,29 +177,40 @@
             return num.toFixed(2);
         }
 
-        function calculate() {
+        function calculate(event) {
+            event.preventDefault();
+            const resultElement = document.getElementById('result');
+            const errorElement = document.getElementById('error');
+            resultElement.innerHTML = '';
+            errorElement.innerHTML = '';
+
             try {
                 // Get input values
                 const totalRevenue = getInputValue('totalRevenue');
-                const intialCoinsCount = getInputValue('intialCoinsCount');
-                const coinsRemaning = getInputValue('coinsRemaning');
+                const initialCoinsCount = getInputValue('initialCoinsCount');
+                const coinsRemaining = getInputValue('coinsRemaining');
                 const bungeeFirstTicket = getInputValue('bungeeFirstTicket');
                 const bungeeLastTicket = getInputValue('bungeeLastTicket');
                 const trampolineFirstTicket = getInputValue('trampolineFirstTicket');
                 const trampolineLastTicket = getInputValue('trampolineLastTicket');
-                let bungeeTicketsSold = 0;
-                let trampolineTicketsSold = 0;
 
-                // Calculate ticket sales if there were any :D 
-                if(bungeeFirstTicket != 0 && bungeeLastTicket != 0){
-                    bungeeTicketsSold = bungeeLastTicket - bungeeFirstTicket + 1;
-                    
+                // Validate inputs
+                if (totalRevenue < BASE_REVENUE) {
+                    throw new Error(`Celková tržba musí byť aspoň ${BASE_REVENUE} €`);
                 }
-                
-                if(trampolineFirstTicket != 0 && trampolineLastTicket != 0){
-                    trampolineTicketsSold = trampolineLastTicket - trampolineFirstTicket + 1;
-                
+                if (bungeeLastTicket < bungeeFirstTicket) {
+                    throw new Error('Posledný lístok Bungee T musí byť väčší ako prvý lístok');
                 }
+                if (trampolineLastTicket < trampolineFirstTicket) {
+                    throw new Error('Posledný lístok Trampolíny musí byť väčší ako prvý lístok');
+                }
+                if (coinsRemaining > initialCoinsCount) {
+                    throw new Error('Počet zostávajúcich žetónov nemôže byť väčší ako počet prevzatých žetónov');
+                }
+
+                // Calculate ticket sales
+                const bungeeTicketsSold = bungeeLastTicket - bungeeFirstTicket + 1;
+                const trampolineTicketsSold = trampolineLastTicket - trampolineFirstTicket + 1;
 
                 // Calculate total prices
                 const bungeeTotalPrice = roundToTwo(bungeeTicketsSold * BUNGEE_PRICE);
@@ -161,31 +219,32 @@
                 // Calculate coin-related metrics
                 const coinsSold = roundToTwo(((totalRevenue - BASE_REVENUE) - (bungeeTotalPrice + trampolineTotalPrice)) / COIN_PRICE);
                 const coinsTotalPrice = roundToTwo(coinsSold * COIN_PRICE);
-                const coinsInRepair = roundToTwo(intialCoinsCount - coinsSold - coinsRemaning);
+                const coinsInRepair = roundToTwo(initialCoinsCount - coinsSold - coinsRemaining);
 
-                console.log('Celková tržba:', totalRevenue);
-                console.log('Bungee T prvý lístok:', bungeeFirstTicket);
-                console.log('Bungee T posledný lístok:', bungeeLastTicket);
-                console.log('Trampolína prvý lístok:', trampolineFirstTicket);
-                console.log('Trampolína posledný lístok:', trampolineLastTicket);
-                console.log('Predané lístky na Bungee T:', bungeeTicketsSold);
-                console.log('Predané lístky na Trampolínu:', trampolineTicketsSold);
+                // Validate results
+                if (coinsSold < 0 || coinsInRepair < 0) {
+                    throw new Error('Neplatné výsledky. Skontrolujte vstupné údaje.');
+                }
 
                 // Display results
-                document.getElementById('result').innerHTML = `
-                    Počet predaných lístkou na Bungee T: ${formatNumber(bungeeTicketsSold)}<br>
+                resultElement.innerHTML = `
+                    <strong>Výsledky:</strong><br>
+                    Počet predaných lístkov na Bungee T: ${formatNumber(bungeeTicketsSold)}<br>
                     Bungee T hodnota v €: ${formatNumber(bungeeTotalPrice)}<br>
-                    Počet predaných lístkou Trampolínu: ${formatNumber(trampolineTicketsSold)}<br>
+                    Počet predaných lístkov na Trampolínu: ${formatNumber(trampolineTicketsSold)}<br>
                     Trampolína hodnota v €: ${formatNumber(trampolineTotalPrice)}<br>
-                    Počet predaných žetonou: ${formatNumber(coinsSold)} (${formatNumber(coinsInRepair)})<br>
+                    Počet predaných žetónov: ${formatNumber(coinsSold)}<br>
                     Žetóny hodnota v €: ${formatNumber(coinsTotalPrice)}<br>
-                    Žetóny na vrátenie: ${formatNumber(coinsRemaning)}
+                    Žetóny v oprave: ${formatNumber(coinsInRepair)}<br>
+                    Žetóny na vrátenie: ${formatNumber(coinsRemaining)}
                 `;
             } catch (error) {
-                document.getElementById('result').innerHTML = 'Chyba pri výpočte. Skontrolujte vstupné údaje.';
-                console.log(error);
+                errorElement.innerHTML = `Chyba: ${error.message}`;
+                console.error(error);
             }
         }
+
+        document.getElementById('revenueForm').addEventListener('submit', calculate);
     </script>
 </body>
 
