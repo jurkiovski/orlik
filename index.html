@@ -177,6 +177,11 @@
             return num.toFixed(2);
         }
 
+        // Function to format whole numbers
+        function formatWholeNumber(num) {
+            return Math.round(num).toString();
+        }
+
         function calculate(event) {
             event.preventDefault();
             const resultElement = document.getElementById('result');
@@ -217,26 +222,32 @@
                 const trampolineTotalPrice = roundToTwo(trampolineTicketsSold * TRAMPOLINE_PRICE);
 
                 // Calculate coin-related metrics
-                const coinsSold = roundToTwo(((totalRevenue - BASE_REVENUE) - (bungeeTotalPrice + trampolineTotalPrice)) / COIN_PRICE);
+                const revenueFromTickets = bungeeTotalPrice + trampolineTotalPrice;
+                const revenueFromCoins = totalRevenue - BASE_REVENUE - revenueFromTickets;
+                const coinsSold = Math.floor(revenueFromCoins / COIN_PRICE);
                 const coinsTotalPrice = roundToTwo(coinsSold * COIN_PRICE);
-                const coinsInRepair = roundToTwo(initialCoinsCount - coinsSold - coinsRemaining);
+                const coinsInRepair = initialCoinsCount - coinsSold - coinsRemaining;
 
                 // Validate results
                 if (coinsSold < 0 || coinsInRepair < 0) {
                     throw new Error('Neplatné výsledky. Skontrolujte vstupné údaje.');
                 }
 
+                // Calculate rounding difference
+                const roundingDifference = roundToTwo(revenueFromCoins - coinsTotalPrice);
+
                 // Display results
                 resultElement.innerHTML = `
                     <strong>Výsledky:</strong><br>
-                    Počet predaných lístkov na Bungee T: ${formatNumber(bungeeTicketsSold)}<br>
+                    Počet predaných lístkov na Bungee T: ${formatWholeNumber(bungeeTicketsSold)}<br>
                     Bungee T hodnota v €: ${formatNumber(bungeeTotalPrice)}<br>
-                    Počet predaných lístkov na Trampolínu: ${formatNumber(trampolineTicketsSold)}<br>
+                    Počet predaných lístkov na Trampolínu: ${formatWholeNumber(trampolineTicketsSold)}<br>
                     Trampolína hodnota v €: ${formatNumber(trampolineTotalPrice)}<br>
-                    Počet predaných žetónov: ${formatNumber(coinsSold)}<br>
+                    Počet predaných žetónov: ${formatWholeNumber(coinsSold)}<br>
                     Žetóny hodnota v €: ${formatNumber(coinsTotalPrice)}<br>
-                    Žetóny v oprave: ${formatNumber(coinsInRepair)}<br>
-                    Žetóny na vrátenie: ${formatNumber(coinsRemaining)}
+                    Žetóny v oprave: ${formatWholeNumber(coinsInRepair)}<br>
+                    Žetóny na vrátenie: ${formatWholeNumber(coinsRemaining)}<br>
+                    Rozdiel zo zaokrúhľovania: ${formatNumber(roundingDifference)} €
                 `;
             } catch (error) {
                 errorElement.innerHTML = `Chyba: ${error.message}`;
